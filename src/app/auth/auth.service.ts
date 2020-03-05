@@ -131,7 +131,6 @@ export class AuthService {
     if (!errorRes.error || !errorRes.error.error) {
       return throwError(errorMessage);
     }
-    debugger;
 
     switch (errorRes.error.error.message) {
       case 'EMAIL_EXISTS':

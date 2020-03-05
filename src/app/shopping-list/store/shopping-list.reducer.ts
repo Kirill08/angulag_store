@@ -41,7 +41,7 @@ export function shoppingListReducer(state: State = initialState, action: Shoppin
         ...action.payload
       };
       const updateIngredients = [...state.ingredients];
-      updateIngredient[state.editedIngredientIndex] = updateIngredient;
+      updateIngredients[state.editedIngredientIndex] = updateIngredient;
 
       return{
         ...state,
