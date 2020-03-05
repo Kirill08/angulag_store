@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="col-ex-12">
+        <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-sm-5 form-group">
+                    <label for="name">Name</label>
+                    <input
+                     type="text"
+                     class="form-control"
+                     formControlName="name">
+                </div>
+                <div class="col-sm-2 form-group">
+                    <label for="amount">Amount</label>
+                    <input
+                    type="number"
+                    class="form-control w-75"
+                    formControlName="amount">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12  m-l-15">
+                  <!-- type="submit"  -->
+                    <button [disabled]="!productForm.valid" type="submit" class="btn btn-success m-r-10" >{{editMode ? 'Update' : 'Add'}}</button>
+                    <button
+                    class="btn btn-danger m-r-10"
+                    type="button" (click)="onRomeve()"
+                    *ngIf="editMode">Delete</button>
+                    <button class="btn btn-primary" type="button" (click)="onCrear()">Clear</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

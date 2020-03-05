@@ -1,0 +1,10 @@
+.active {
+  border: none;
+  outline: none;
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

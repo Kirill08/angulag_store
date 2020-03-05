@@ -1,0 +1,35 @@
+.m-h-50 {
+    max-height: 60px;
+}
+
+.m-15 {
+    margin: 15px !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.m-l-15 {
+    margin-left: 15px;
+}
+
+.m-r-10 {
+    margin-right: 10px;
+}
+
+.m-h-300 {
+    max-height: 300px;
+}
+
+.m-t-60 {
+    margin-top: 60px;
+}
+
+.w-75{
+    width: 70px !important;
+}
+
+.display-flex {
+  display: flex;
+}
