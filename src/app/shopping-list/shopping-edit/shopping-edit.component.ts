@@ -6,7 +6,7 @@ import { Store } from '@ngrx/store';
 import { ShoppingService } from './../shopping-service/shopping.service';
 import { Ingredient } from 'src/app/shared/ingredient.model';
 import * as ShoppingListActions from '../store/shopping-list.actions';
-import * as fromShoppingList from '../store/shopping-list.reducer';
+import * as fromApp from '../../store/app.reducer';
 
 @Component({
   selector: 'app-shopping-edit',
@@ -21,10 +21,10 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
   productForm: FormGroup;
   subscription: Subscription;
   editedItem: Ingredient;
-  private store: Store<fromShoppingList.AppState>;
+  private store: Store<fromApp.AppState>;
 
   constructor(shoppService: ShoppingService,
-              store: Store<fromShoppingList.AppState>) {
+              store: Store<fromApp.AppState>) {
     this.shoppingService = shoppService;
     this.store = store;
   }

@@ -6,14 +6,13 @@ import * as ShoppingListActions from '../../shopping-list/store/shopping-list.ac
 import { Recipe } from './../recipe.model';
 import { ShoppingService } from './../../shopping-list/shopping-service/shopping.service';
 import { Ingredient } from 'src/app/shared/ingredient.model';
-import * as fromShoppingList from '../../shopping-list/store/shopping-list.reducer';
-
+import * as fromApp from '../../store/app.reducer';
 @Injectable({
   providedIn: 'root'
 })
 export class RecipesService {
   recipeChanged = new Subject<Recipe[]>();
-  private store: Store<fromShoppingList.AppState>;
+  private store: Store<fromApp.AppState>;
   // private recipes: Recipe[] = [
   //   new Recipe('A test Recipe',
   //    'Asuper-tasty Schnitzel - just awesone!',
@@ -35,7 +34,7 @@ export class RecipesService {
   shoppingListService: ShoppingService;
 
   constructor(shoppListService: ShoppingService,
-              store: Store<fromShoppingList.AppState>) {
+              store: Store<fromApp.AppState>) {
     this.shoppingListService = shoppListService;
     this.store = store;
   }
