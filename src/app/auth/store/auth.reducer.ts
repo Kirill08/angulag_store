@@ -2,11 +2,11 @@ import { User } from './../user.model';
 import * as AuthActions from './auth.actions';
 
 export interface State {
-  user: User;
+  user2: User;
 }
 
 const initialState: State = {
-  user: null
+  user2: null
 };
 
 export function authReducer(state = initialState, action: AuthActions.AuthActions) {
