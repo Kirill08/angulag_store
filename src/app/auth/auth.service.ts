@@ -1,9 +1,13 @@
+import { Store } from '@ngrx/store';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, tap } from 'rxjs/operators';
-import { throwError, Subject, BehaviorSubject } from 'rxjs';
+import { throwError, BehaviorSubject } from 'rxjs';
+
 import { User } from './user.model';
+import * as fromApp from '../store/app.reducer';
+import * as AuthActions from './store/auth.actions';
 
 export interface AuthResponseData {
   idToken: string;
@@ -22,8 +26,9 @@ export class AuthService {
   readonly userDataKey = 'userData';
   private tokenExpirationTimer: any;
   public user = new BehaviorSubject<User>(null);
+  private store: Store<fromApp.AppState>;
 
-  constructor(http: HttpClient, router: Router) {
+  constructor(http: HttpClient, router: Router, ) {
     this.http = http;
     this.router = router;
   }
@@ -86,6 +91,9 @@ export class AuthService {
          tokenExpirationDate);
 
     if (loadedUser.token) {
+      // this.store.dispatch(new AuthActions.Login({
+      //   email:
+      // }))
       this.user.next(loadedUser);
       // Find the time difference between saved and current time
       const expirationDuration = tokenExpirationDate.getTime() - new Date().getTime();
