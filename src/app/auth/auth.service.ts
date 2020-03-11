@@ -25,14 +25,13 @@ export class AuthService {
   private router: Router;
   readonly userDataKey = 'userData';
   private tokenExpirationTimer: any;
-  public user = new BehaviorSubject<User>(null);
+  // public user = new BehaviorSubject<User>(null);
   private store: Store<fromApp.AppState>;
-
-  constructor(http: HttpClient, router: Router, ) {
+  constructor(http: HttpClient, router: Router, store: Store<fromApp.AppState>) {
     this.http = http;
     this.router = router;
+    this.store = store;
   }
-
   sugnup(email: string, password: string) {
     return this.http.post<AuthResponseData>
     ('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDMBpGyL08gkWQVppz3Pz61DxwAwmiPlKo',
@@ -84,6 +83,7 @@ export class AuthService {
     }
 
     const tokenExpirationDate = new Date(userData._tokenExpirationDate);
+
     const loadedUser = new User(
       userData.email,
        userData.id,
@@ -91,10 +91,13 @@ export class AuthService {
          tokenExpirationDate);
 
     if (loadedUser.token) {
-      // this.store.dispatch(new AuthActions.Login({
-      //   email:
-      // }))
-      this.user.next(loadedUser);
+      this.store.dispatch(new AuthActions.Login({
+        email: loadedUser.email,
+        userId: loadedUser.id,
+        token: loadedUser.token,
+        expirationDate: tokenExpirationDate
+      }));
+      // this.user.next(loadedUser);
       // Find the time difference between saved and current time
       const expirationDuration = tokenExpirationDate.getTime() - new Date().getTime();
       this.autoLogout(expirationDuration);
@@ -102,7 +105,8 @@ export class AuthService {
   }
 
   logout() {
-    this.user.next(null);
+    // this.user.next(null);
+    this.store.dispatch(new AuthActions.Logout());
     this.router.navigate(['/auth']);
     localStorage.removeItem(this.userDataKey);
     if (this.tokenExpirationTimer) {
@@ -126,9 +130,11 @@ export class AuthService {
       email,
       userId,
       token,
-      expirationDate);
+      expirationDate
+    );
 
-    this.user.next(user);
+    // this.user.next(user);
+    this.store.dispatch(new AuthActions.Login({email, userId, token, expirationDate}));
     this.autoLogout(expiresIn * 1000);
     localStorage.setItem(this.userDataKey, JSON.stringify(user));
   }
