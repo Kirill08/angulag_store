@@ -1,11 +1,12 @@
-import { User } from './../user.model';
 import { Router } from '@angular/router';
 import { catchError, switchMap, map, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Actions, ofType, Effect } from '@ngrx/effects';
-import { of } from 'rxjs';
 import { Injectable } from '@angular/core';
 
+import { AuthService } from './../auth.service';
+import { User } from './../user.model';
 import * as AuthActions from './auth.actions';
 
 export interface AuthResponseData {
@@ -82,6 +83,9 @@ export class AuthEffects {
           returnSecureToken: true
         }
       ).pipe(
+        tap(resData => {
+          this.authService.setLogoutTimer(+resData.expiresIn * 1000);
+        }),
         map(resData => {
           return handleAuthentication(
             +resData.expiresIn,
@@ -110,6 +114,9 @@ export class AuthEffects {
           returnSecureToken: true
         }
       ).pipe(
+        tap(resData => {
+          this.authService.setLogoutTimer(+resData.expiresIn * 1000);
+        }),
         map(resData => {
           return handleAuthentication(
             +resData.expiresIn,
@@ -125,7 +132,7 @@ export class AuthEffects {
   }));
 
   @Effect({dispatch: false})
-  authSuccess = this.actions$.pipe(
+  authRedirect = this.actions$.pipe(
     ofType(AuthActions.AUTHTICATE_SUCCESS), tap(() => {
     this.router.navigate(['/']);
   }));
@@ -134,7 +141,9 @@ export class AuthEffects {
   authLogout = this.actions$.pipe(
     ofType(AuthActions.LOGOUT),
     tap(() => {
+      this.authService.clearLogoutTimer();
       localStorage.removeItem(USER_DATA_KEY);
+      this.router.navigate(['/auth']);
     })
   );
 
@@ -163,18 +172,17 @@ export class AuthEffects {
            tokenExpirationDate);
 
       if (loadedUser.token) {
+        // Find the time difference between saved and current time
+        const expirationDuration = tokenExpirationDate.getTime() - new Date().getTime();
+        this.authService.setLogoutTimer(expirationDuration);
+
         return new AuthActions.AuthenticateSuccess({
           email: loadedUser.email,
           userId: loadedUser.id,
           token: loadedUser.token,
           expirationDate: tokenExpirationDate
         });
-        // this.user.next(loadedUser);
-        // Find the time difference between saved and current time
-        // const expirationDuration = tokenExpirationDate.getTime() - new Date().getTime();
-        // this.autoLogout(expirationDuration);
       }
-
       return {type: 'DUMMY'};
     })
   );
@@ -182,7 +190,8 @@ export class AuthEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
 }
