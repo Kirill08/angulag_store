@@ -1,17 +1,19 @@
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+
 import { AuthService } from './../auth/auth.service';
 import { DataStorageServece } from './../shared/data-storage.serve';
-import { Component, OnInit, OnDestroy } from '@angular/core';
 import * as fromApp from '../store/app.reducer';
+import * as AuthActions from '../auth/store/auth.actions';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit, OnDestroy{
+export class HeaderComponent implements OnInit, OnDestroy {
 
   public isAuthenticated = false;
 
@@ -50,6 +52,6 @@ export class HeaderComponent implements OnInit, OnDestroy{
   }
 
   onLogout() {
-    this.authService.logout();
+    this.store.dispatch(new AuthActions.Logout());
   }
 }

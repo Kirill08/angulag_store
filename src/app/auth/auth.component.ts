@@ -26,6 +26,8 @@ export class AuthComponent implements OnInit, OnDestroy {
   private router: Router;
   private componentFactoryResolver: ComponentFactoryResolver;
   private closeSub: Subscription;
+  private storeSub: Subscription;
+
   @ViewChild(PlaceholderDirective, { static: false}) alertHost: PlaceholderDirective;
   private store: Store<fromApp.AppState>;
 
@@ -45,13 +47,12 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    debugger;
     this.loginForm = new FormGroup({
       email: new FormControl(null, [Validators.required, Validators.email] ),
       password: new FormControl(null, [Validators.required, Validators.minLength(6)])
     });
-    debugger;
-    this.store.select('auth').subscribe(authState => {
+
+    this.storeSub = this.store.select('auth').subscribe(authState => {
       this.isLoading = authState.loading;
       this.error = authState.authError;
       if (this.error) {
@@ -67,8 +68,6 @@ export class AuthComponent implements OnInit, OnDestroy {
 
     const email = this.loginForm.value.email;
     const password = this.loginForm.value.password;
-    this.isLoading = true;
-    let authObs: Observable<AuthResponseData>;
 
     if (this.isLoginMode) {
       // authObs = this.authService.login(email, password);
@@ -76,27 +75,16 @@ export class AuthComponent implements OnInit, OnDestroy {
         new AuthActions.LoginStart({email: email, password: password})
       );
     } else {
-      authObs = this.authService.sugnup(email, password);
+      this.store.dispatch(
+        new AuthActions.SignupStart({email: email, password: password})
+      );
     }
-
-
-    // authObs.subscribe((resData) => {
-    //   console.log(resData);
-    //   this.isLoading = false;
-    //   // this.error = null;
-    //   this.router.navigate(['/recipes']);
-    // }, (errorMessage) => {
-    //   console.log(errorMessage);
-    //   this.isLoading = false;
-    //   this.error = errorMessage;
-    //   this.showErrorAlert(errorMessage);
-    // });
 
     this.loginForm.reset();
   }
 
   onHandleError() {
-    this.error = null;
+    this.store.dispatch(new AuthActions.ClearError());
   }
 
   private showErrorAlert(message: string) {
@@ -116,6 +104,10 @@ export class AuthComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.closeSub) {
       this.closeSub.unsubscribe();
+    }
+
+    if (this.storeSub) {
+      this.storeSub.unsubscribe();
     }
   }
 
