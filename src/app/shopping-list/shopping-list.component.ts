@@ -11,7 +11,6 @@ import { Ingredient } from './../shared/ingredient.model';
   // providers: [ShoppingService]
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  debugger;
   ingredients: Ingredient[];
   shoppingService: ShoppingService;
   private igChangeSub: Subscription;

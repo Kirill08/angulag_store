@@ -1,10 +1,11 @@
-import { PlaceholderDirective } from './../shared/placeholder/placeholder.directive';
-import { AlertComponent } from './../shared/alert/alert.component';
 import { Router } from '@angular/router';
-import { AuthService, AuthResponseData } from './auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit, ComponentFactoryResolver, ViewChild, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
+
+import { PlaceholderDirective } from './../shared/placeholder/placeholder.directive';
+import { AlertComponent } from './../shared/alert/alert.component';
+import { AuthService, AuthResponseData } from './auth.service';
 
 @Component({
   selector: 'app-auth',
@@ -60,7 +61,6 @@ export class AuthComponent implements OnInit, OnDestroy {
     authObs.subscribe((resData) => {
       console.log(resData);
       this.isLoading = false;
-      // this.error = null;
       this.router.navigate(['/recipes']);
     }, (errorMessage) => {
       console.log(errorMessage);
@@ -95,5 +95,4 @@ export class AuthComponent implements OnInit, OnDestroy {
       this.closeSub.unsubscribe();
     }
   }
-
 }

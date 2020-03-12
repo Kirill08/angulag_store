@@ -62,6 +62,7 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
   }
 
   onRomeve() {
+    this.shoppService.romeveIngredient(this.editedItemIndex);
     this.onClear();
   }
 

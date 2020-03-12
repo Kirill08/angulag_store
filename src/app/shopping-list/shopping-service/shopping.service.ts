@@ -24,12 +24,12 @@ export class ShoppingService {
     return this.ingredients[index];
   }
 
+  constructor() { }
+
   addIngredient(ingredient: Ingredient) {
     this.ingredients.push(ingredient);
     this.ingredientsChanged.next(this.ingredients.slice());
   }
-
-  constructor() { }
 
   addIngredients(ingredient: Ingredient[]) {
     this.ingredients.push(...ingredient);
