@@ -7,11 +7,11 @@ import { Ingredient } from 'src/app/shared/ingredient.model';
   providedIn: 'root'
 })
 export class ShoppingService {
-  startedientsChanged = new Subject<number>();
+  public startedientsChanged = new Subject<number>();
 
   private ingredients: Ingredient[] = [
-    // new Ingredient('Apples', 5),
-    // new Ingredient('Tomatoes', 10)
+    new Ingredient('Apples', 5),
+    new Ingredient('Tomatoes', 10)
   ];
 
   // public createIngedient = new EventEmitter<Ingredient>();

@@ -1,11 +1,9 @@
 import { Subscription, Observable } from 'rxjs';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {Store} from '@ngrx/store';
 
 import { ShoppingService } from './shopping-service/shopping.service';
 import { Ingredient } from './../shared/ingredient.model';
 import * as ShoppingListActions from './store/shopping-list.actions';
-import * as fromApp from '../store/app.reducer';
 
 @Component({
   selector: 'app-shopping-list',
@@ -14,35 +12,31 @@ import * as fromApp from '../store/app.reducer';
   // providers: [ShoppingService]
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  ingredients: Observable<{ingredients: Ingredient[]}>;
 
+  ingredients: Ingredient[];
   shoppingService: ShoppingService;
-  // private igChangeSub: Subscription;
-  private store: Store<{shoppingList: {ingredients: Ingredient[]}}>;
+  private igChangeSub: Subscription;
 
-  constructor(shopService: ShoppingService,
-              store: Store<fromApp.AppState>) {
+  constructor(shopService: ShoppingService, igChangeSub: Subscription) {
+    debugger;
     this.shoppingService = shopService;
-    this.store = store;
-    // this.igChangeSub = igChangeSub;
-   }
+    this.igChangeSub = igChangeSub;
+  }
 
   ngOnInit() {
-    this.ingredients = this.store.select('shoppingList');
-
-    // this.ingredients = this.shoppingService.getIngredients();
-    // this.igChangeSub = this.shoppingService.ingredientsChanged
-    //   .subscribe((ingredients: Ingredient[]) => {
-    //     this.ingredients = ingredients;
-    //   });
+    debugger;
+    this.ingredients = this.shoppingService.getIngredients();
+    this.igChangeSub = this.shoppingService.ingredientsChanged
+      .subscribe((ingredients: Ingredient[]) => {
+        this.ingredients = ingredients;
+      });
   }
 
   ngOnDestroy(): void {
-    //this.igChangeSub.unsubscribe();
+    this.igChangeSub.unsubscribe();
   }
 
   onEditItem(index: number) {
-    // this.shoppingService.startedientsChanged.next(index);
-    this.store.dispatch(new ShoppingListActions.StartEdit(index));
+    this.shoppingService.startedientsChanged.next(index);
   }
 }
