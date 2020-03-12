@@ -28,7 +28,7 @@ export class RecipesService {
   // ];
 
   private recipes: Recipe[] = [];
-  shoppingListService: ShoppingService;
+  private shoppingListService: ShoppingService;
 
   constructor(shoppListService: ShoppingService) {
     this.shoppingListService = shoppListService;
